@@ -29,12 +29,14 @@
       <a-entity
         gps-entity-place="latitude: 56.88253; longitude: 60.6172;" <!-- Замените на координаты -->
         id="video-marker"
+        onclick="toggleContent('video')"
       >
         <a-video
           src="#promo-video"
           width="4"
           height="2"
           position="0 2 -5"
+          id="video-element"
         ></a-video>
       </a-entity>
 
@@ -42,13 +44,28 @@
       <a-entity
         gps-entity-place="latitude: 56.88253; longitude: 60.6172;" <!-- Замените на координаты -->
         id="model-marker"
+        onclick="toggleContent('model')"
         gltf-model="#model"
         scale="0.5 0.5 0.5"
         position="0 0 -5"
+        visible="false"
       ></a-entity>
 
       <!-- Камера с GPS -->
       <a-entity gps-camera rotation-reader></a-entity>
     </a-scene>
+
+    <script>
+      // Функция для переключения между видео и 3D моделью
+      function toggleContent(type) {
+        if (type === 'video') {
+          document.getElementById('video-element').setAttribute('visible', 'true');
+          document.getElementById('model-marker').setAttribute('visible', 'false');
+        } else if (type === 'model') {
+          document.getElementById('video-element').setAttribute('visible', 'false');
+          document.getElementById('model-marker').setAttribute('visible', 'true');
+        }
+      }
+    </script>
   </body>
 </html>
