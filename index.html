@@ -1,47 +1,28 @@
 <!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AR для выставки в Екатеринбурге</title>
+    <script src="https://aframe.io/releases/1.2.0/aframe.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/gh/AR-js-org/AR.js/aframe/build/aframe-ar.js"></script>
+</head>
+<body style="margin: 0; overflow: hidden;">
+    <a-scene embedded arjs>
+        <!-- Камера для AR -->
+        <a-camera gps-camera></a-camera>
 
-<html>
-  <head>
-    <title>AR с GPS-маркерами для выставочного пространства Екатеринбург</title>
-    <meta charset="utf-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <link rel="stylesheet" href="styles.css">
+        <!-- Первый маркер для видео -->
+        <a-marker type="gps" longitude="60.6173" latitude="56.88241">
+            <a-video src="glav.mp4" width="5" height="3"></a-video>
+        </a-marker>
 
-    <script src="https://aframe.io/releases/1.0.4/aframe.min.js"></script>
-    <script src="https://raw.githack.com/AR-js-org/AR.js/master/aframe/build/aframe-ar.js"></script>
-    <script src="https://unpkg.com/aframe-gps-camera/dist/aframe-gps-camera.min.js"></script>
-    <script src="gesture-detector.js"></script>
-    <script src="gesture-handler.js"></script>
-  </head>
-
-  <body>
-    <a-scene
-      embedded
-      renderer="logarithmicDepthBuffer: true;"
-      vr-mode-ui="enabled: false"
-      gesture-detector
-      id="scene"
-    >
-      <a-assets>
-        <a-asset-item
-          id="bowser"
-          src="moai.glb"
-        >
-        </a-asset-item>
-      </a-assets>
-
-      <a-entity
-        gps-entity-place="latitude: 56.88241; longitude: 60.6173;"
-        id="bowser-model"
-        gltf-model="#bowser"
-        position="0 0 -5"
-        scale="0.5 0.5 0.5"
-        class="clickable"
-        gesture-handler
-      >
-      </a-entity>
-
-      <a-entity gps-camera rotation-reader></a-entity>
+        <!-- Второй маркер для 3D объекта -->
+        <a-marker type="gps" longitude="60.6183" latitude="56.88341">
+            <a-entity gltf-model="moai.glb" scale="2 2 2"></a-entity>
+        </a-marker>
     </a-scene>
-  </body>
+
+    <script src="script.js"></script>
+</body>
 </html>
