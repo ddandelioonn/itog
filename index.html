@@ -16,10 +16,11 @@
       embedded
       arjs
       renderer="logarithmicDepthBuffer: true;"
-      vr-mode-ui="enabled: false"
+      vr-mode-ui="enabled: false;"
       id="scene"
     >
       <a-assets>
+        <!-- Загружаем видео и 3D модель -->
         <a-asset-item id="model" src="anime1.glb"></a-asset-item>
         <video id="promo-video" autoplay loop muted playsinline src="cat.mp4"></video>
       </a-assets>
@@ -37,7 +38,7 @@
         ></a-video>
       </a-entity>
 
-      <!-- Второй GPS-маркер: 3D-модель -->
+      <!-- Второй GPS-маркер: 3D модель -->
       <a-entity
         gps-entity-place="latitude: 56.88253; longitude: 60.6172;" <!-- Замените на координаты -->
         id="model-marker"
