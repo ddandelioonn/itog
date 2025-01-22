@@ -13,7 +13,7 @@
   <body style="margin: 0; overflow: hidden;">
     <a-scene
       embedded
-      arjs="sourceType: webcam; trackingMethod: best;"
+      arjs="sourceType: webcam; trackingMethod: best; trackingBackend: artoolkit; markersAreaEnabled: true;"
       vr-mode-ui="enabled: false"
       renderer="logarithmicDepthBuffer: true;"
     >
@@ -28,6 +28,7 @@
         latitude="56.88253"
         longitude="60.6172"
         id="video-marker"
+        marker-helper
       >
         <a-video
           src="#video1"
@@ -43,6 +44,7 @@
         latitude="56.88253"
         longitude="60.6172"
         id="3d-marker"
+        marker-helper
       >
         <a-entity
           gltf-model="url(assets/3dobject.glb)"
@@ -54,6 +56,16 @@
 
       <!-- Камера AR для GPS -->
       <a-entity camera gps-camera rotation-reader></a-entity>
+      
+      <!-- Новая область маркеров, которая может быть активирована -->
+      <a-entity
+        id="learn-new-marker-area"
+        geometry="primitive: plane; height: 3; width: 3;"
+        material="color: red; opacity: 0.5;"
+        position="0 0 -5"
+        visible="false"
+      ></a-entity>
+      
     </a-scene>
   </body>
 </html>
