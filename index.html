@@ -1,71 +1,32 @@
 <!DOCTYPE html>
-<html>
+<html lang="ru">
   <head>
-    <title>AR.js GPS Advertising App</title>
-    <meta charset="utf-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <link rel="stylesheet" href="styles.css">
+    <title>AR с GPS-маркером и изображением</title>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
 
     <script src="https://aframe.io/releases/1.0.4/aframe.min.js"></script>
     <script src="https://raw.githack.com/AR-js-org/AR.js/master/aframe/build/aframe-ar.js"></script>
-    <script src="https://unpkg.com/aframe-gps-camera/dist/aframe-gps-camera.min.js"></script>
   </head>
 
-  <body>
+  <body style="margin: 0; overflow: hidden;">
     <a-scene
       embedded
-      arjs
-      renderer="logarithmicDepthBuffer: true;"
       vr-mode-ui="enabled: false;"
-      id="scene"
+      renderer="logarithmicDepthBuffer: true;"
+      arjs="sourceType: webcam; trackingMethod: best;"
     >
-      <a-assets>
-        <!-- Загружаем видео и 3D модель -->
-        <a-asset-item id="model" src="moai.glb"></a-asset-item>
-        <video id="promo-video" autoplay loop muted playsinline src="glav.mp4"></video>
-      </a-assets>
-
-      <!-- Первый GPS-маркер: видео -->
       <a-entity
-        gps-entity-place="latitude: 56.88253; longitude: 60.6172;" <!-- Замените на координаты -->
-        id="video-marker"
-        onclick="toggleContent('video')"
-      >
+        gps-entity-place="latitude: 56.88253; longitude: 60.6172;"
+        >
         <a-video
-          src="#promo-video"
-          width="4"
-          height="2"
-          position="0 2 -5"
-          id="video-element"
-        ></a-video>
-      </a-entity>
-
-      <!-- Второй GPS-маркер: 3D модель -->
-      <a-entity
-        gps-entity-place="latitude: 56.88253; longitude: 60.6172;" <!-- Замените на координаты -->
-        id="model-marker"
-        onclick="toggleContent('model')"
-        gltf-model="#model"
-        scale="0.5 0.5 0.5"
-        position="0 0 -5"
-        visible="false"
-      ></a-entity>
-
-      <!-- Камера с GPS -->
-      <a-entity gps-camera rotation-reader></a-entity>
+            src="glav.mp4" 
+            look-at="[gps-camera]"
+            scale="0 0 -50"
+          ></a-video>
+        </a-entity>
+     
+      <a-entity camera gps-camera rotation-reader></a-entity>
     </a-scene>
-
-    <script>
-      // Функция для переключения между видео и 3D моделью
-      function toggleContent(type) {
-        if (type === 'video') {
-          document.getElementById('video-element').setAttribute('visible', 'true');
-          document.getElementById('model-marker').setAttribute('visible', 'false');
-        } else if (type === 'model') {
-          document.getElementById('video-element').setAttribute('visible', 'false');
-          document.getElementById('model-marker').setAttribute('visible', 'true');
-        }
-      }
-    </script>
   </body>
 </html>
