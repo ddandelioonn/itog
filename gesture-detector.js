@@ -1,11 +1,9 @@
-// Component that detects and emits events for touch gestures
-
 AFRAME.registerComponent("gesture-detector", {
   schema: {
-    element: { default: "" }
+    element: { default: "" },
   },
 
-  init: function() {
+  init: function () {
     this.targetElement =
       this.data.element && document.querySelector(this.data.element);
 
@@ -14,59 +12,48 @@ AFRAME.registerComponent("gesture-detector", {
     }
 
     this.internalState = {
-      previousState: null
+      previousState: null,
     };
 
     this.emitGestureEvent = this.emitGestureEvent.bind(this);
 
     this.targetElement.addEventListener("touchstart", this.emitGestureEvent);
-
     this.targetElement.addEventListener("touchend", this.emitGestureEvent);
-
     this.targetElement.addEventListener("touchmove", this.emitGestureEvent);
   },
 
-  remove: function() {
+  remove: function () {
     this.targetElement.removeEventListener("touchstart", this.emitGestureEvent);
-
     this.targetElement.removeEventListener("touchend", this.emitGestureEvent);
-
     this.targetElement.removeEventListener("touchmove", this.emitGestureEvent);
   },
 
-  emitGestureEvent(event) {
+  emitGestureEvent: function (event) {
     const currentState = this.getTouchState(event);
-
     const previousState = this.internalState.previousState;
 
     const gestureContinues =
       previousState &&
       currentState &&
-      currentState.touchCount == previousState.touchCount;
+      currentState.touchCount === previousState.touchCount;
 
     const gestureEnded = previousState && !gestureContinues;
-
     const gestureStarted = currentState && !gestureContinues;
 
     if (gestureEnded) {
       const eventName =
         this.getEventPrefix(previousState.touchCount) + "fingerend";
-
       this.el.emit(eventName, previousState);
-
       this.internalState.previousState = null;
     }
 
     if (gestureStarted) {
       currentState.startTime = performance.now();
-
       currentState.startPosition = currentState.position;
-
       currentState.startSpread = currentState.spread;
 
       const eventName =
         this.getEventPrefix(currentState.touchCount) + "fingerstart";
-
       this.el.emit(eventName, currentState);
 
       this.internalState.previousState = currentState;
@@ -76,69 +63,46 @@ AFRAME.registerComponent("gesture-detector", {
       const eventDetail = {
         positionChange: {
           x: currentState.position.x - previousState.position.x,
-
-          y: currentState.position.y - previousState.position.y
-        }
+          y: currentState.position.y - previousState.position.y,
+        },
       };
 
       if (currentState.spread) {
-        eventDetail.spreadChange = currentState.spread - previousState.spread;
+        eventDetail.spreadChange =
+          currentState.spread - previousState.spread;
       }
 
-      // Update state with new data
-
       Object.assign(previousState, currentState);
-
-      // Add state data to event detail
-
       Object.assign(eventDetail, previousState);
 
       const eventName =
         this.getEventPrefix(currentState.touchCount) + "fingermove";
-
       this.el.emit(eventName, eventDetail);
     }
   },
 
-  getTouchState: function(event) {
+  getTouchState: function (event) {
     if (event.touches.length === 0) {
       return null;
     }
 
-    // Convert event.touches to an array so we can use reduce
-
     const touchList = [];
-
     for (let i = 0; i < event.touches.length; i++) {
       touchList.push(event.touches[i]);
     }
 
     const touchState = {
-      touchCount: touchList.length
+      touchCount: touchList.length,
     };
 
-    // Calculate center of all current touches
-
-    const centerPositionRawX =
+    const centerX =
       touchList.reduce((sum, touch) => sum + touch.clientX, 0) /
       touchList.length;
-
-    const centerPositionRawY =
+    const centerY =
       touchList.reduce((sum, touch) => sum + touch.clientY, 0) /
       touchList.length;
 
-    touchState.positionRaw = { x: centerPositionRawX, y: centerPositionRawY };
-
-    // Scale touch position and spread by average of window dimensions
-
-    const screenScale = 2 / (window.innerWidth + window.innerHeight);
-
-    touchState.position = {
-      x: centerPositionRawX * screenScale,
-      y: centerPositionRawY * screenScale
-    };
-
-    // Calculate average spread of touches from the center point
+    touchState.position = { x: centerX, y: centerY };
 
     if (touchList.length >= 2) {
       const spread =
@@ -146,21 +110,20 @@ AFRAME.registerComponent("gesture-detector", {
           return (
             sum +
             Math.sqrt(
-              Math.pow(centerPositionRawX - touch.clientX, 2) +
-                Math.pow(centerPositionRawY - touch.clientY, 2)
+              Math.pow(centerX - touch.clientX, 2) +
+                Math.pow(centerY - touch.clientY, 2)
             )
           );
         }, 0) / touchList.length;
 
-      touchState.spread = spread * screenScale;
+      touchState.spread = spread;
     }
 
     return touchState;
   },
 
-  getEventPrefix(touchCount) {
+  getEventPrefix: function (touchCount) {
     const numberNames = ["one", "two", "three", "many"];
-
     return numberNames[Math.min(touchCount, 4) - 1];
-  }
+  },
 });
