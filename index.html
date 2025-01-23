@@ -1,5 +1,4 @@
 <!DOCTYPE html>
-
 <html>
   <head>
     <title>AR для выставки в Екатеринбурге</title>
@@ -10,6 +9,7 @@
     <script src="https://aframe.io/releases/1.0.4/aframe.min.js"></script>
     <script src="https://raw.githack.com/AR-js-org/AR.js/master/aframe/build/aframe-ar.js"></script>
     <script src="https://unpkg.com/aframe-gps-camera/dist/aframe-gps-camera.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/gh/donmccurdy/aframe-extras@6.1.1/dist/aframe-extras.controls.min.js"></script>
     <script src="gesture-detector.js"></script>
     <script src="gesture-handler.js"></script>
   </head>
@@ -23,25 +23,65 @@
       id="scene"
     >
       <a-assets>
-        <a-asset-item
-          id="bowser"
-          src="moai.glb"
-        >
-        </a-asset-item>
+        <a-asset-item id="bowser" src="moai.glb"></a-asset-item>
       </a-assets>
 
       <a-entity
         gps-entity-place="latitude: 56.88706; longitude: 60.58664;"
         id="bowser-model"
         gltf-model="#bowser"
-        position="0 0 -5"
+        position="0 1.5 -5"
         scale="0.5 0.5 0.5"
+        rotation="0 0 0"
         class="clickable"
         gesture-handler
-      >
-      </a-entity>
+        rotation-reader
+      ></a-entity>
 
       <a-entity gps-camera rotation-reader></a-entity>
     </a-scene>
+
+    <script>
+      // Добавляем жесты для вращения и перемещения
+      AFRAME.registerComponent("gesture-handler", {
+        schema: {
+          enabled: { default: true }
+        },
+        init: function () {
+          const el = this.el;
+
+          this.handleRotation = function (event) {
+            if (event.detail.action === "rotate") {
+              const rotation = el.getAttribute("rotation");
+              rotation.y += event.detail.spreadChange / 10; // Вращение по оси Y
+              el.setAttribute("rotation", rotation);
+            }
+          };
+
+          this.handlePinchMove = function (event) {
+            if (event.detail.action === "scale") {
+              const scale = el.getAttribute("scale");
+              const newScale = scale.x + event.detail.spreadChange / 200;
+              if (newScale > 0.1 && newScale < 2) {
+                el.setAttribute("scale", {
+                  x: newScale,
+                  y: newScale,
+                  z: newScale,
+                });
+              }
+            }
+          };
+
+          el.sceneEl.addEventListener("gesturemove", this.handleRotation);
+          el.sceneEl.addEventListener("gesturemove", this.handlePinchMove);
+        },
+
+        remove: function () {
+          const el = this.el;
+          el.sceneEl.removeEventListener("gesturemove", this.handleRotation);
+          el.sceneEl.removeEventListener("gesturemove", this.handlePinchMove);
+        }
+      });
+    </script>
   </body>
 </html>
