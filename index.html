@@ -1,5 +1,4 @@
 <!DOCTYPE html>
-
 <html>
   <head>
     <title>AR для выставки в Екатеринбурге</title>
@@ -10,38 +9,27 @@
     <script src="https://aframe.io/releases/1.0.4/aframe.min.js"></script>
     <script src="https://raw.githack.com/AR-js-org/AR.js/master/aframe/build/aframe-ar.js"></script>
     <script src="https://unpkg.com/aframe-gps-camera/dist/aframe-gps-camera.min.js"></script>
-    <script src="gesture-detector.js"></script>
-    <script src="gesture-handler.js"></script>
+    <script src="gesture-detector.js"></script> <!-- Подключение gesture-detector -->
+    <script src="gesture-handler.js"></script> <!-- Подключение gesture-handler -->
   </head>
-
   <body>
-    <a-scene
-      embedded
-      renderer="logarithmicDepthBuffer: true;"
-      vr-mode-ui="enabled: false"
-      gesture-detector
-      id="scene"
-    >
+    <a-scene embedded renderer="logarithmicDepthBuffer: true;" vr-mode-ui="enabled: false" gesture-detector>
       <a-assets>
-        <a-asset-item
-          id="bowser"
-          src="moai.glb"
-        >
-        </a-asset-item>
+        <a-asset-item id="bowser" src="moai.glb"></a-asset-item>
       </a-assets>
-      <a-entity
-          gps-entity-place="latitude: 56.88706; longitude: 60.58664;"
-          id="bowser-model"
-          gltf-model="#bowser"
-          position="0 1.6 -5"  <!-- Позиционируем модель на 5 единиц перед камерой -->
-          scale="0.5 0.5 0.5"
-          class="clickable"
-          gesture-handler
-        >
-        </a-entity>
-      
-      <a-entity gps-camera position="0 1.6 0" rotation="0 0 0"></a-entity>
 
+      <!-- Модель с компонентами gesture-detector и gesture-handler -->
+      <a-entity gps-entity-place="latitude: 56.88706; longitude: 60.58664;" 
+                id="bowser-model" 
+                gltf-model="#bowser" 
+                position="0 1.6 -5"  <!-- Позиция перед камерой -->
+                scale="0.5 0.5 0.5" 
+                gesture-handler="enabled: true; rotationFactor: 5; minScale: 0.3; maxScale: 8;" 
+                gesture-detector="element: #bowser-model;">
+      </a-entity>
+
+      <!-- Камера -->
+      <a-entity gps-camera position="0 1.6 0" rotation="0 0 0"></a-entity>
     </a-scene>
   </body>
 </html>
