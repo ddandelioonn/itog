@@ -86,21 +86,16 @@ AFRAME.registerComponent("gesture-detector", {
       return null;
     }
 
-    const touchList = [];
-    for (let i = 0; i < event.touches.length; i++) {
-      touchList.push(event.touches[i]);
-    }
+    const touchList = Array.from(event.touches); // Упрощаем создание массива
 
     const touchState = {
       touchCount: touchList.length,
     };
 
     const centerX =
-      touchList.reduce((sum, touch) => sum + touch.clientX, 0) /
-      touchList.length;
+      touchList.reduce((sum, touch) => sum + touch.clientX, 0) / touchList.length;
     const centerY =
-      touchList.reduce((sum, touch) => sum + touch.clientY, 0) /
-      touchList.length;
+      touchList.reduce((sum, touch) => sum + touch.clientY, 0) / touchList.length;
 
     touchState.position = { x: centerX, y: centerY };
 
