@@ -1,18 +1,19 @@
-<html> 
+<html>
   <head>
     <title>AR для выставки в Екатеринбурге</title>
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <link rel="stylesheet" href="styles.css">
 
-    <script src="https://aframe.io/releases/1.0.4/aframe.min.js"></script>
-    <script src="https://raw.githack.com/AR-js-org/AR.js/master/aframe/build/aframe-ar.js"></script>
+    <!-- Подключение обновленных библиотек -->
+    <script src="https://aframe.io/releases/1.2.0/aframe.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/gh/AR-js-org/AR.js/aframe/build/aframe-ar.min.js"></script>
     <script src="https://unpkg.com/aframe-gps-camera/dist/aframe-gps-camera.min.js"></script>
     <script src="gesture-detector.js"></script>
     <script src="gesture-handler.js"></script>
   </head>
 
-<body>
+  <body>
     <a-scene
       arjs
       embedded
@@ -22,24 +23,22 @@
       id="scene"
     >
       <a-assets>
-        <a-asset-item
-          id="bowser"
-          src="moai.glb"
-        >
-        </a-asset-item>
+        <!-- Подгрузка 3D-модели -->
+        <a-asset-item id="bowser" src="moai.glb"></a-asset-item>
       </a-assets>
-      
+
+      <!-- 3D-модель с поддержкой жестов -->
       <a-entity
         gps-entity-place="latitude: 56.88706; longitude: 60.58664;"
         id="bowser-model"
         gltf-model="#bowser"
         position="0 0 -5"
         scale="0.5 0.5 0.5"
-        class="clickable"
         gesture-handler
       >
       </a-entity>
 
+      <!-- Камера для GPS -->
       <a-entity gps-camera rotation-reader></a-entity>
     </a-scene>
   </body>
