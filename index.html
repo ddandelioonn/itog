@@ -1,47 +1,45 @@
-<!DOCTYPE html>
-<html lang="en">
+<html>
   <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>AR для выставки в Екатеринбурге</title>
-
-    <!-- Подключение CSS -->
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <link rel="stylesheet" href="styles.css">
 
-    <!-- Подключение библиотек A-Frame и AR.js -->
     <script src="https://aframe.io/releases/1.0.4/aframe.min.js"></script>
     <script src="https://raw.githack.com/AR-js-org/AR.js/master/aframe/build/aframe-ar.js"></script>
-    <script src="https://cdn.jsdelivr.net/gh/fcor/arjs-gestures/dist/gestures.min.js"></script>
-
-    <!-- Подключение пользовательского JavaScript -->
-    <script src="gestures.js" defer></script>
+    <script src="https://unpkg.com/aframe-gps-camera/dist/aframe-gps-camera.min.js"></script>
+    <script src="gesture-detector.js"></script>
+    <script src="gesture-handler.js"></script>
   </head>
 
-  <body>
+<body>
     <a-scene
+      arjs
       embedded
       renderer="logarithmicDepthBuffer: true;"
       vr-mode-ui="enabled: false"
       gesture-detector
       id="scene"
     >
-      <!-- Загрузка модели -->
       <a-assets>
-        <a-asset-item id="moai-model" src="assets/moai.glb"></a-asset-item>
+        <a-asset-item
+          id="bowser"
+          src="https://cdn.glitch.com/06bd98b4-97ee-4c07-a546-fe39ca205034%2Fbowser.glb"
+        >
+        </a-asset-item>
       </a-assets>
-
-      <!-- 3D-объект -->
+      
       <a-entity
         gps-entity-place="latitude: 56.88706; longitude: 60.58664;"
-        id="moai"
-        gltf-model="#moai-model"
-        position="0 1.5 -5"
+        id="bowser-model"
+        gltf-model="#bowser"
+        position="0 0 -5"
         scale="0.5 0.5 0.5"
         class="clickable"
         gesture-handler
-      ></a-entity>
+      >
+      </a-entity>
 
-      <!-- Камера -->
       <a-entity gps-camera rotation-reader></a-entity>
     </a-scene>
   </body>
