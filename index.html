@@ -1,3 +1,4 @@
+<!DOCTYPE html>
 <html>
   <head>
     <title>AR для выставки в Екатеринбурге</title>
@@ -8,8 +9,7 @@
     <script src="https://aframe.io/releases/1.0.4/aframe.min.js"></script>
     <script src="https://raw.githack.com/AR-js-org/AR.js/master/aframe/build/aframe-ar.js"></script>
     <script src="https://unpkg.com/aframe-gps-camera/dist/aframe-gps-camera.min.js"></script>
-    <script src="gesture-detector.js"></script>
-    <script src="gesture-handler.js"></script>
+    <script src="https://cdn.jsdelivr.net/gh/fcor/arjs-gestures/dist/gestures.min.js"></script>
   </head>
 
   <body>
@@ -20,26 +20,69 @@
       gesture-detector
       id="scene"
     >
+      <!-- Загрузка модели -->
       <a-assets>
         <a-asset-item
-          id="bowser"
+          id="moai-model"
           src="moai.glb"
-        >
-        </a-asset-item>
+        ></a-asset-item>
       </a-assets>
 
+      <!-- 3D-объект с жестами -->
       <a-entity
         gps-entity-place="latitude: 56.88706; longitude: 60.58664;"
-        id="bowser-model"
-        gltf-model="#bowser"
+        id="moai"
+        gltf-model="#moai-model"
         position="0 0 -5"
         scale="0.5 0.5 0.5"
         class="clickable"
         gesture-handler
-      >
-      </a-entity>
+      ></a-entity>
 
+      <!-- Камера -->
       <a-entity gps-camera rotation-reader></a-entity>
     </a-scene>
+
+    <script>
+      // Слушаем события жестов для модели
+      const model = document.querySelector("#moai");
+
+      model.addEventListener("gesturemove", (event) => {
+        const gesture = event.detail.action;
+
+        // Масштабирование (pinch)
+        if (gesture === "scale") {
+          const currentScale = model.getAttribute("scale");
+          const newScale = currentScale.x + event.detail.spreadChange / 200;
+          if (newScale > 0.1 && newScale < 2) { // Ограничение масштаба
+            model.setAttribute("scale", {
+              x: newScale,
+              y: newScale,
+              z: newScale,
+            });
+          }
+        }
+
+        // Вращение (rotate)
+        if (gesture === "rotate") {
+          const currentRotation = model.getAttribute("rotation");
+          model.setAttribute("rotation", {
+            x: currentRotation.x,
+            y: currentRotation.y + event.detail.angleChange,
+            z: currentRotation.z,
+          });
+        }
+
+        // Перемещение (drag) — опционально
+        if (gesture === "drag") {
+          const currentPosition = model.getAttribute("position");
+          model.setAttribute("position", {
+            x: currentPosition.x + event.detail.deltaX / 100,
+            y: currentPosition.y,
+            z: currentPosition.z + event.detail.deltaY / 100,
+          });
+        }
+      });
+    </script>
   </body>
 </html>
