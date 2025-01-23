@@ -30,16 +30,18 @@
         </a-asset-item>
       </a-assets>
       <a-entity
-        gps-entity-place="latitude: 56.88706; longitude: 60.58664;"
-        id="bowser-model"
-        gltf-model="#bowser"
-        position="0 0 0"
-        scale="0.5 0.5 0.5"
-        gesture-handler
-      >
+          gps-entity-place="latitude: 56.88706; longitude: 60.58664;"
+          id="bowser-model"
+          gltf-model="#bowser"
+          position="0 1.6 -5"  <!-- Позиционируем модель на 5 единиц перед камерой -->
+          scale="0.5 0.5 0.5"
+          class="clickable"
+          gesture-handler
+        >
+        </a-entity>
       
-      
-      <a-entity gps-camera rotation-reader></a-entity>
+      <a-entity gps-camera position="0 1.6 0" rotation="0 0 0"></a-entity>
+
     </a-scene>
   </body>
 </html>
